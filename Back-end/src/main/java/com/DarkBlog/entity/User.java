@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 @Entity()
@@ -32,5 +34,7 @@ public class User {
     private String email;
     @Column(name = "created_at")
     private Date createdAt = new Date();
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Collection<Role> roles=new ArrayList<>();
 
 }

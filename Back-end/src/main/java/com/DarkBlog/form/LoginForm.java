@@ -1,4 +1,4 @@
-package com.DarkBlog.entity;
+package com.DarkBlog.form;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

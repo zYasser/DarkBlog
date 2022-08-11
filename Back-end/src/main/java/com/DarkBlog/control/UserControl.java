@@ -1,16 +1,23 @@
 package com.DarkBlog.control;
 
-import com.DarkBlog.entity.LoginForm;
+import com.DarkBlog.form.LoginForm;
+import com.DarkBlog.entity.Role;
 import com.DarkBlog.entity.User;
 import com.DarkBlog.error.EmailAlreadyExistException;
+import com.DarkBlog.form.RoleToUserForm;
 import com.DarkBlog.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.net.URI;
+import java.util.List;
 
 @RestController
+@RequestMapping("/api")
 public class UserControl {
     @Autowired
     private UserServiceImpl userService;
@@ -19,9 +26,35 @@ public class UserControl {
     public User register(@RequestBody User user) throws EmailAlreadyExistException {
         return userService.register(user);
     }
+//
+//    @GetMapping("/login")
+//    public boolean login(@RequestBody LoginForm loginForm, HttpServletResponse response) {
+//        boolean res = userService.login(loginForm, response);
+//        System.out.println(response.toString());
+//        return res;
+//    }
 
-    @GetMapping("/login")
-    public boolean login(@RequestBody LoginForm loginForm) {
-        return userService.login(loginForm);
+    @GetMapping("/me")
+    public User me(HttpServletRequest request) {
+        User user = userService.getMe(request);
+        System.out.println("request = " + request.toString());
+        return user;
     }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getUsers() {
+        return ResponseEntity.ok().body(userService.getAllUsers());
+    }
+
+    @PostMapping("/role/save")
+    public ResponseEntity<Role> saveRole(@RequestBody Role role) {
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("api/role/save").toUriString());
+        return ResponseEntity.created(uri).body(userService.createRole(role));
+    }
+    @PostMapping("/user/addRule")
+    public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserForm form) {
+        userService.addRoleToUser(form.getUsername(),form.getRoleName());
+        return ResponseEntity.ok().build();
+    }
+
 }

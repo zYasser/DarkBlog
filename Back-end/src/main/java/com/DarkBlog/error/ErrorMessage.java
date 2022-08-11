@@ -1,4 +1,4 @@
-package com.DarkBlog.entity;
+package com.DarkBlog.error;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
