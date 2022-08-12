@@ -6,6 +6,7 @@ import com.DarkBlog.entity.User;
 import com.DarkBlog.error.EmailAlreadyExistException;
 import com.DarkBlog.form.RoleToUserForm;
 import com.DarkBlog.service.UserServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,11 +14,14 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@Slf4j
 public class UserControl {
     @Autowired
     private UserServiceImpl userService;
@@ -35,10 +39,16 @@ public class UserControl {
 //    }
 
     @GetMapping("/me")
-    public User me(HttpServletRequest request) {
-        User user = userService.getMe(request);
-        System.out.println("request = " + request.toString());
-        return user;
+    public String  me(HttpServletRequest request) throws IOException {
+        StringBuilder builder = new StringBuilder();
+        try (BufferedReader in = request.getReader()) {
+            char[] buf = new char[4096];
+            for (int len; (len = in.read(buf)) > 0; )
+                builder.append(buf, 0, len);
+        }
+        String requestBody = builder.toString();
+        log.info("Request body: " + requestBody);
+        return "abc";
     }
 
     @GetMapping("/users")

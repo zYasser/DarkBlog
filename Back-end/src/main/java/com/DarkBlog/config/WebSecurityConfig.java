@@ -1,6 +1,7 @@
 package com.DarkBlog.config;
 
 import com.DarkBlog.filter.CustomAuthenticationFilter;
+import com.DarkBlog.filter.CustomAuthorizationFilter;
 import com.DarkBlog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -31,8 +33,11 @@ class WebSecurityConfig  {
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().anyRequest().permitAll();
+        http.authorizeRequests().antMatchers("/api/**").hasAnyAuthority("User");
+        http.authorizeRequests().anyRequest().authenticated();
+
         http.addFilter(new CustomAuthenticationFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class))));
+        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
