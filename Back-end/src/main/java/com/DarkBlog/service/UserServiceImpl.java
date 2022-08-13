@@ -1,10 +1,10 @@
 package com.DarkBlog.service;
 
 import com.DarkBlog.config.PasswordEncoder;
-import com.DarkBlog.form.LoginForm;
 import com.DarkBlog.entity.Role;
 import com.DarkBlog.entity.User;
 import com.DarkBlog.error.EmailAlreadyExistException;
+import com.DarkBlog.form.LoginForm;
 import com.DarkBlog.repository.RoleRepository;
 import com.DarkBlog.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ import java.util.Optional;
 @Service
 @Transactional
 @Slf4j
-public class UserServiceImpl implements UserService , UserDetailsService {
+public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
     PasswordEncoder passwordEncoder;
     @Autowired
@@ -67,17 +67,17 @@ public class UserServiceImpl implements UserService , UserDetailsService {
 
     @Override
     public boolean addRoleToUser(String username, String roleName) {
-        Optional<User> user=userRepository.findByUsername(username);
-        if(user.isEmpty())
+        Optional<User> user = userRepository.findByUsername(username);
+        if (user.isEmpty())
             return false;
-        Role role=roleRepository.findByName(roleName);
+        Role role = roleRepository.findByName(roleName);
         user.get().getRoles().add(role);
         return true;
     }
 
     @Override
     public Role createRole(Role role) {
-            return roleRepository.save(role);
+        return roleRepository.save(role);
     }
 
     @Override
@@ -99,6 +99,17 @@ public class UserServiceImpl implements UserService , UserDetailsService {
         return userRepository.findAll();
     }
 
+    @Override
+    public User getUser(String username) {
+        if (username != null) {
+            return userRepository.findByUsername(username).orElse(null);
+
+        }
+        else {
+            return null;
+        }
+    }
+
     private void createCookie(HttpServletResponse response, String user) {
         Cookie cookie = new Cookie("username", user);
         cookie.setMaxAge(7 * 24 * 60 * 60);
@@ -117,18 +128,18 @@ public class UserServiceImpl implements UserService , UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user =userRepository.findByUsername(username);
-        if(user.isEmpty()){
+        Optional<User> user = userRepository.findByUsername(username);
+        if (user.isEmpty()) {
             log.error("User not found in the databae");
             throw new UsernameNotFoundException("User doesn't exist");
         }
-
-
-        Collection<SimpleGrantedAuthority> authorities=new ArrayList<>();
-        user.get().getRoles().forEach(role-> {
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        user.get().getRoles().forEach(role -> {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         });
-        return new org.springframework.security.core.userdetails.User(user.get().getUsername(),user.get().getPassword() , authorities);
+        return new org.springframework.security.core.userdetails.User(user.get().getUsername(),
+                user.get().getPassword(),
+                authorities);
 
     }
 }

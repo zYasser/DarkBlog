@@ -16,5 +16,6 @@ public interface UserService {
     Role createRole(Role role);
     User getMe(HttpServletRequest request);
     List<User> getAllUsers();
+    User getUser(String username);
 
 }
