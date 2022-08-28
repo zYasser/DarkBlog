@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class LoginForm {
+    private String username;
     private String password;
-    private String usernameOrEmail;
 }

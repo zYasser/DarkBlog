@@ -5,26 +5,24 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
-@Entity()
+@Entity(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "users")
 public class User {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @SequenceGenerator(name = "user_Sequence", sequenceName = "user_Sequence", allocationSize = 0, initialValue = 0)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSequence")
     private Long id;
-    @Min(3)
+    @Length(min = 3)
     private String username;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
@@ -34,7 +32,7 @@ public class User {
     private String email;
     @Column(name = "created_at")
     private Date createdAt = new Date();
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<Role> roles=new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE} ,mappedBy = "users")
+    private List<Role> roles = new ArrayList<>();
 
 }

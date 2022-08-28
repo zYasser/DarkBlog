@@ -12,9 +12,15 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ResponseStatus
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(EmailAlreadyExistException.class)
-    public ResponseEntity<ErrorMessage> emailAlreadyExistException(EmailAlreadyExistException exception, WebRequest socket) {
+    public ResponseEntity<ErrorMessage> EmailAlreadyExistException(EmailAlreadyExistException exception, WebRequest socket) {
         ErrorMessage errorMessage = new ErrorMessage(HttpStatus.CONFLICT, exception.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
+
+    }
+    @ExceptionHandler(UserNotExistException.class)
+    public ResponseEntity<ErrorMessage> UserNotExist(UserNotExistException exception, WebRequest socket) {
+        ErrorMessage errorMessage = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
 
     }
 }
