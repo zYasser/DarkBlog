@@ -7,7 +7,5 @@ export const login = () => {
   };
   axios.post("http://localhost:8080/api/login", loginForm, {
     withCredentials:true
-    
-    
   }).then();
 };

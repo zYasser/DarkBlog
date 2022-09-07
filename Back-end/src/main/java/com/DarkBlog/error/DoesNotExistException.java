@@ -1,5 +1,7 @@
 package com.DarkBlog.error;
 
+import java.util.function.Supplier;
+
 public class UserNotExistException extends Exception {
     public UserNotExistException() {
         super();
