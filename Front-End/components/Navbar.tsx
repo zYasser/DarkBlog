@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import NextLink from "next/link";
-import { me } from "../api/me";
 import { login } from "../api/login";
 interface NavBarProps {}
 
@@ -11,26 +10,18 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
 
 
   useEffect(() => {
-    const apiCall =  () => {
-     me().then(s=>setRes(s)).catch(function (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message);
+    const apiCall =  async () => {
+      const res =await login({username:"root" , password:"root"})
+      if(res?.status!==200){
+        console.log('error' , res , '\n' ,res.data);
+        
+        setRes(res.data.error);
       }
-      console.log(error.config);
-    });
-  
+      else{
+        console.log('error' , res.data);
+        
+        setRes(res.data)
+      }
 
     };
     apiCall();
