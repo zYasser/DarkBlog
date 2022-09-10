@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -22,12 +23,13 @@ import java.io.IOException;
 @Slf4j
 @Component
 public class CustomUsernamePasswordAuthenticationFilter extends OncePerRequestFilter {
+
     @Autowired
     private AuthenticationManager authenticationManager;
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         return  !request.getServletPath()
-                .equals("/login") ;
+                .equals("/api/login") ;
     }
 
     @Override
@@ -41,13 +43,25 @@ public class CustomUsernamePasswordAuthenticationFilter extends OncePerRequestFi
                     username
             );
         Authentication a =new UsernamePasswordAuthentication(username,password);
-             var user =authenticationManager.authenticate(a);
-             if(user.isAuthenticated()){
-                 log.info("Authenticated!");
-                 SecurityContextHolder.getContext().setAuthentication(a);
-                 filterChain.doFilter(request, response); // only when authentication worked
+        try {
+            var user =authenticationManager.authenticate(a);
+            if(user.isAuthenticated()){
+                response.setStatus(HttpServletResponse.SC_OK);
+                log.info("Authenticated!");
+                SecurityContextHolder.getContext().setAuthentication(a);
 
-             }
+                filterChain.doFilter(request, response); // only when authentication worked
 
+
+            }
+            else{
+                response.sendError(403 , "Check Your Email and Password");
+
+            }
+
+        }catch (AuthenticationException authenticationException){
+            response.sendError(403 , "Check Your Email and Password");
+
+        }
     }
 }

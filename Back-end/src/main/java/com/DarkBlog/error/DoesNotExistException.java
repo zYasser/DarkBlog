@@ -2,24 +2,24 @@ package com.DarkBlog.error;
 
 import java.util.function.Supplier;
 
-public class UserNotExistException extends Exception {
-    public UserNotExistException() {
+public class DoesNotExistException extends Exception  {
+    public DoesNotExistException() {
         super();
     }
 
-    public UserNotExistException(String message) {
+    public DoesNotExistException(String message) {
         super(message);
     }
 
-    public UserNotExistException(String message, Throwable cause) {
+    public DoesNotExistException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public UserNotExistException(Throwable cause) {
+    public DoesNotExistException(Throwable cause) {
         super(cause);
     }
 
-    protected UserNotExistException(String message,
+    protected DoesNotExistException(String message,
             Throwable cause,
             boolean enableSuppression,
             boolean writableStackTrace) {

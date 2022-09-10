@@ -1,34 +1,11 @@
 import React, { useEffect, useState } from "react";
 import NextLink from "next/link";
-import { login } from "../api/login";
 interface NavBarProps {}
 
 export const NavBar: React.FC<NavBarProps> = ({}) => {
   const [res, setRes] = useState() as any;
   const [user, setUser] = useState() as any;
 
-
-
-  useEffect(() => {
-    const apiCall =  async () => {
-      const res =await login({username:"root" , password:"root"})
-      if(res?.status!==200){
-        console.log('error' , res , '\n' ,res.data);
-        
-        setRes(res.data.error);
-      }
-      else{
-        console.log('error' , res.data);
-        
-        setRes(res.data)
-      }
-
-    };
-    apiCall();
-  }, []);
-  console.log(res);
-  
-  
   return (
     <div>
       <nav className="bg-white border-gray-300 px-2 sm:px-4 py-2.5 dark:bg-gray-900 ">

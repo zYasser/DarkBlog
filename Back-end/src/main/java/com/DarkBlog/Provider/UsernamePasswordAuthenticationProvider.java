@@ -2,10 +2,8 @@ package com.DarkBlog.Provider;
 
 import com.DarkBlog.config.PasswordEncoder;
 import com.DarkBlog.entity.User;
-import com.DarkBlog.error.UserNotExistException;
 import com.DarkBlog.repository.UserRepository;
 import com.DarkBlog.service.UserDetailImpl;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -22,6 +20,8 @@ import java.util.Optional;
 @Component
 public class UsernamePasswordAuthenticationProvider implements AuthenticationProvider {
 
+
+
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -30,10 +30,15 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username=authentication.getName();
         String password=String.valueOf(authentication.getCredentials());
+        if(username==null || password==null){
+            throw new BadCredentialsException("Please Check Password and Username");
+
+        }
         System.out.println("password = " + password);
         log.info("here from UsernamePasswordAuthenticationProvider ");
         Optional<User> u =userRepository.findByUsername(username);
         if(u.isEmpty()){
+            log.error("there is no user exist");
             return null;
         }
         if(checkPassword(password,u.get().getPassword())) {
@@ -43,6 +48,7 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
             return new UsernamePasswordAuthenticationToken(username, password, user.getAuthorities());
         }
         else{
+            log.error("password is incorrect ");
             throw new BadCredentialsException("Please Check Password and Username");
         }
 

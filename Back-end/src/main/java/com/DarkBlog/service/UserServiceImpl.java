@@ -3,6 +3,7 @@ package com.DarkBlog.service;
 import com.DarkBlog.config.PasswordEncoder;
 import com.DarkBlog.entity.Role;
 import com.DarkBlog.entity.User;
+import com.DarkBlog.error.DoesNotExistException;
 import com.DarkBlog.error.EmailAlreadyExistException;
 import com.DarkBlog.form.LoginForm;
 import com.DarkBlog.repository.RoleRepository;
@@ -53,7 +54,7 @@ public class UserServiceImpl {
     }
     @Transactional
     public void addRoleToUser(User user){
-        Optional<Role> role=roleRepository.findByName("user");
+        Optional<Role> role=roleRepository.findByName("User");
         if(role.isEmpty()){
             throw new NullPointerException("Roll doesn't exist");
 
@@ -122,5 +123,10 @@ public class UserServiceImpl {
         if (user.isEmpty())
             return false;
         return passwordEncoder.Argon2PasswordEncoder().matches(password, user.get().getPassword());
+    }
+
+    public String test(Long id) throws DoesNotExistException {
+        Optional<String> str=userRepository.checkIfUserExist(id);
+        return str.orElseThrow(()-> new DoesNotExistException("user doesn't exist"));
     }
 }

@@ -1,17 +1,36 @@
 import { Form, Formik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import { InputField } from "../components/InputField";
 import { CustomButton } from "../components/CustomButton";
 import NextLink from "next/link";
 import Link from "next/link";
+import {loginRest} from '../api/loginApi'
 
 interface LoginProps {}
 
 const Login: React.FC<LoginProps> = ({}) => {
+  useEffect(() => {
+  
+  }, []);
+
+
   return (
     <Formik
-      initialValues={{ usernameOrLogin: "", password: "" }}
-      onSubmit={async (values, { setErrors }) => {}}
+      initialValues={{ usernameOrEmail: "", password: "" }}
+      onSubmit={ (values, { setErrors }) => {
+        let result
+        loginRest({username:values.usernameOrEmail , password:values.password}).then((res)=> {
+          console.log(res);
+          result=res;
+          
+        }).catch(e=>{
+          setErrors(e)
+          console.log(e.toJSON());
+          
+        })
+        console.log(result);
+        
+      }}
     >
       {({ isSubmitting }) => (
         <div className="h-screen grid content-center">

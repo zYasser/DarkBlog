@@ -1,6 +1,7 @@
 package com.DarkBlog.control;
 
 import com.DarkBlog.entity.User;
+import com.DarkBlog.error.DoesNotExistException;
 import com.DarkBlog.error.EmailAlreadyExistException;
 import com.DarkBlog.form.LoginForm;
 import com.DarkBlog.service.UserServiceImpl;
@@ -15,6 +16,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api")
 @Slf4j
+
 public class UserControl {
     @Autowired
     private UserServiceImpl userService;
@@ -24,16 +26,25 @@ public class UserControl {
         log.info("Currently Registering a user");
         return userService.register(user);
     }
+    @GetMapping("/welcome")
+    public String welcome(){
+        return "Welcome";
+    }
 
     @PostMapping("/login")
-    public boolean login(@RequestBody LoginForm loginForm, HttpServletResponse response) {
-        return userService.login(loginForm, response);
+    public boolean login() {
+        return true;
     }
 
     @GetMapping("/me")
     public String me(Authentication authentication) throws IOException {
 
         return userService.getMe(authentication);
+    }
+    @GetMapping("/test/{id}")
+    public String test(@PathVariable int id) throws DoesNotExistException {
+
+        return userService.test((long)id);
     }
 
 }

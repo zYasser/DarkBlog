@@ -1,6 +1,6 @@
 package com.DarkBlog.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,9 +18,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
+
 public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @Column(name = "user_id")
     private Long id;
     @Length(min = 3)
     private String username;
@@ -32,7 +37,10 @@ public class User {
     private String email;
     @Column(name = "created_at")
     private Date createdAt = new Date();
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE} ,mappedBy = "users")
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "users")
     private List<Role> roles = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId", fetch = FetchType.LAZY)
+    private List<Post> posts = new ArrayList<>();
 
 }
