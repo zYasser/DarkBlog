@@ -1,53 +1,66 @@
 import { Form, Formik } from "formik";
-import React, { useEffect } from "react";
-import { InputField } from "../components/InputField";
-import { CustomButton } from "../components/CustomButton";
 import NextLink from "next/link";
-import Link from "next/link";
-import {loginRest} from '../api/loginApi'
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import { loginRest } from "../api/loginApi";
+import { CustomButton } from "../components/CustomButton";
+import { ErrorField } from "../components/ErrorField";
+import { InputField } from "../components/InputField";
 
 interface LoginProps {}
 
 const Login: React.FC<LoginProps> = ({}) => {
-  useEffect(() => {
-  
-  }, []);
-
-
+  const [errorMsg, setErrorMsg] = useState("");
+  const route = useRouter();
   return (
     <Formik
       initialValues={{ usernameOrEmail: "", password: "" }}
-      onSubmit={ (values, { setErrors }) => {
-        let result
-        loginRest({username:values.usernameOrEmail , password:values.password}).then((res)=> {
-          console.log(res);
-          result=res;
-          
-        }).catch(e=>{
-          setErrors(e)
-          console.log(e.toJSON());
-          
+      onSubmit={(values, { setErrors, setSubmitting }) => {
+        let result;
+        loginRest({
+          username: values.usernameOrEmail,
+          password: values.password,
         })
+          .then((res) => {
+            if (res.status === 200) {
+              route.push("/");
+            } else if (res.status === 403) {
+              setErrorMsg("Please Check your Username and Password!");
+            } else {
+              setErrorMsg("Something went wrong!, Please Try Again");
+              
+            }
+            setSubmitting(false);
+          })
+          .catch((e) => {
+            setErrorMsg("Something went wrong!, Please Try Again");
+            setSubmitting(false);
+
+            console.log(e.toJSON());
+            return;
+          });
         console.log(result);
-        
       }}
     >
       {({ isSubmitting }) => (
         <div className="h-screen grid content-center">
-        <Form className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-5 dark:bg-gray-800 dark:border-gray-700 m-auto space-y-4 md:space-y-6">
-          <InputField label="Username Or Email" name="usernameOrEmail" />
-          <InputField label="Password" name="password" />
-          <div className="flex w-95% h-2.5">
-          <NextLink href="/forget-password">
+          <Form className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-5 dark:bg-gray-800 dark:border-gray-700 m-auto space-y-4 md:space-y-6">
+            {errorMsg ? <ErrorField message={errorMsg} /> : null}
+            <InputField label="Username Or Email" name="usernameOrEmail" />
+            <InputField label="Password" name="password" />
+            <div className="flex w-95% h-2.5">
+              <NextLink href="/forget-password">
                 <a className="ml-auto">Forget Password?</a>
               </NextLink>
-              </div>
-          <div className="flex justify-evenly">
-            <CustomButton label={"Cancel"} text={"btn-cancel"} />
-            <CustomButton label={"Submit"} text={"btn-submit"} />
-          </div>
-          
-        </Form>
+            </div>
+            <div className="flex justify-evenly">
+              <CustomButton
+                label={"Submit"}
+                text={"btn-submit"}
+                Submitted={isSubmitting}
+              />
+            </div>
+          </Form>
         </div>
       )}
     </Formik>

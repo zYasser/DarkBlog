@@ -15,7 +15,7 @@ export const loginRest = (data: LoginForm) => {
     method: 'post',
     url: 'http://localhost:8080/api/login',
     headers: { 
-      'Access-Control-Allow-Credentials':true,
+        'Access-Control-Allow-Credentials':true,
 
     },
     data : para
