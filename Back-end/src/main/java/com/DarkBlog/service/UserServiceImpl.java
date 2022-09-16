@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -125,8 +126,7 @@ public class UserServiceImpl {
         return passwordEncoder.Argon2PasswordEncoder().matches(password, user.get().getPassword());
     }
 
-    public String test(Long id) throws DoesNotExistException {
-        Optional<String> str=userRepository.checkIfUserExist(id);
-        return str.orElseThrow(()-> new DoesNotExistException("user doesn't exist"));
+    public User getUser(Long id) throws DoesNotExistException {
+        return userRepository.findById(id).orElseThrow(()->new  DoesNotExistException("User doesn't exist"));
     }
 }

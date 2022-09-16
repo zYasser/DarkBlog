@@ -56,8 +56,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> findWithPagination(PostPaginationForm postPaginationForm) {
-        Pageable page= PageRequest.of(postPaginationForm.getLimit() , 10);
-        return postRepository.findAllPagination(page);
+    public List<Post> findWithPagination(Integer page) {
+        log.info("From service currently fetching data....");
+        return postRepository.findAllPagination(PageRequest.of(page , 3));
     }
 }

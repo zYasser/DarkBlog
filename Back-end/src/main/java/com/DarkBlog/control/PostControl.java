@@ -32,14 +32,15 @@ public class PostControl {
      return ResponseEntity.ok(post.get());
 
     }
-    @GetMapping("/posts")
+    @GetMapping("/admin/posts")
     private ResponseEntity<List<Post>> posts(){
         List<Post> list =postService.findAllPost();
         return ResponseEntity.ok(list);
     }
-    @GetMapping("/posts-pagination")
-    private ResponseEntity<List<Post>> postPagination(@RequestBody PostPaginationForm postPaginationForm){
-        List<Post> list =postService.findWithPagination(postPaginationForm);
+    @GetMapping("/post")
+    private ResponseEntity<List<Post>> postPagination(@RequestParam Integer page){
+        log.info("server receives a request to fetch posts");
+        List<Post> list =postService.findWithPagination(page);
         return ResponseEntity.ok(list);
     }
 }

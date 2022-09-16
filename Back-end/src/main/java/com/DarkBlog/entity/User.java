@@ -18,9 +18,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 
 public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,10 +34,12 @@ public class User {
     private String email;
     @Column(name = "created_at")
     private Date createdAt = new Date();
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "users")
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "users")
     private List<Role> roles = new ArrayList<>();
+    @JsonBackReference
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private List<Post> posts = new ArrayList<>();
 
 }

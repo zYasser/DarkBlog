@@ -41,10 +41,10 @@ public class UserControl {
 
         return userService.getMe(authentication);
     }
-    @GetMapping("/test/{id}")
-    public String test(@PathVariable int id) throws DoesNotExistException {
+    @GetMapping("/user/{id}")
+    public User getUser(@PathVariable int id) throws DoesNotExistException {
 
-        return userService.test((long)id);
+        return userService.getUser((long)id);
     }
 
 }

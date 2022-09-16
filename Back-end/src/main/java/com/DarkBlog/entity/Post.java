@@ -19,9 +19,6 @@ import java.util.Date;
 @Table(name="posts")
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 
 public class Post {
     @Id
@@ -34,8 +31,7 @@ public class Post {
     private Date createdAt = new Date();
     private String text;
     private Integer point=0;
-    @JsonBackReference
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="user_id", nullable=false ,referencedColumnName = "user_id")
     private User userId;
 

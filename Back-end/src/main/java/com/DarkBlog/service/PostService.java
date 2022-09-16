@@ -14,5 +14,5 @@ public interface PostService {
 
     List<Post> findAllPost();
 
-    List<Post> findWithPagination(PostPaginationForm postPaginationForm);
+    List<Post> findWithPagination(Integer page);
 }

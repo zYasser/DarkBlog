@@ -1,4 +1,4 @@
-package com.DarkBlog.Provider;
+package com.DarkBlog.provider;
 
 import com.DarkBlog.config.PasswordEncoder;
 import com.DarkBlog.entity.User;

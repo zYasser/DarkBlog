@@ -1,4 +1,4 @@
-package com.DarkBlog.Provider;
+package com.DarkBlog.provider;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;

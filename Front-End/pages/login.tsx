@@ -6,9 +6,7 @@ import { loginRest } from "../api/loginApi";
 import { CustomButton } from "../components/CustomButton";
 import { ErrorField } from "../components/ErrorField";
 import { InputField } from "../components/InputField";
-
 interface LoginProps {}
-
 const Login: React.FC<LoginProps> = ({}) => {
   const [errorMsg, setErrorMsg] = useState("");
   const route = useRouter();
@@ -24,30 +22,30 @@ const Login: React.FC<LoginProps> = ({}) => {
           .then((res) => {
             if (res.status === 200) {
               route.push("/");
-            } else if (res.status === 403) {
+            }
+            console.log("hhh", res.status, typeof res.status);
+
+            setSubmitting(false);
+          })
+          .catch((error) => {
+            setErrorMsg("Something went wrong!, Please Try Again");
+            setSubmitting(false);
+            if (error.response.status === 403) {
               setErrorMsg("Please Check your Username and Password!");
             } else {
               setErrorMsg("Something went wrong!, Please Try Again");
-              
             }
-            setSubmitting(false);
-          })
-          .catch((e) => {
-            setErrorMsg("Something went wrong!, Please Try Again");
-            setSubmitting(false);
-
-            console.log(e.toJSON());
-            return;
           });
-        console.log(result);
       }}
     >
       {({ isSubmitting }) => (
-        <div className="h-screen grid content-center">
+        <div className="h-screen grid content-center ">
           <Form className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-5 dark:bg-gray-800 dark:border-gray-700 m-auto space-y-4 md:space-y-6">
-            {errorMsg ? <ErrorField message={errorMsg} /> : null}
-            <InputField label="Username Or Email" name="usernameOrEmail" />
-            <InputField label="Password" name="password" />
+            <div className="sm:m-3">
+              {errorMsg ? <ErrorField message={errorMsg} /> : null}
+              <InputField label="Username Or Email" name="usernameOrEmail" />
+              <InputField label="Password" name="password" />
+            </div>
             <div className="flex w-95% h-2.5">
               <NextLink href="/forget-password">
                 <a className="ml-auto">Forget Password?</a>

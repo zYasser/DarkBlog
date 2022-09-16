@@ -1,6 +1,6 @@
 package com.DarkBlog.config;
 
-import com.DarkBlog.Provider.UsernamePasswordAuthenticationProvider;
+import com.DarkBlog.provider.UsernamePasswordAuthenticationProvider;
 import com.DarkBlog.filter.CustomUsernamePasswordAuthenticationFilter;
 import com.DarkBlog.handler.CustomLogoutSuccessHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -39,11 +39,11 @@ class WebSecurityConfig {
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
-        http.authorizeRequests().antMatchers("/api/register", "/logout").permitAll();
-        http.addFilterAt(filter, UsernamePasswordAuthenticationFilter.class);
-        http.authorizeRequests().anyRequest().authenticated();
-
-        http.logout().deleteCookies().logoutSuccessHandler(customLogoutSuccessHandler);
+//        http.authorizeRequests().antMatchers("/api/register", "/logout").permitAll();
+//        http.addFilterAt(filter, UsernamePasswordAuthenticationFilter.class);
+//        http.authorizeRequests().anyRequest().authenticated();
+//
+//        http.logout().deleteCookies().logoutSuccessHandler(customLogoutSuccessHandler);
         return http.build();
     }
 
