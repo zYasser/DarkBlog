@@ -5,7 +5,7 @@ module.exports = {
    theme: {
     extend: {     
       fontFamily:{
-          'loto':['Lato', 'sans-serif']
+        coolx:'Pacifico, cursive'
       } ,
       width: {
       '95%': '95%',
