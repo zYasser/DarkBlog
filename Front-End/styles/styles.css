@@ -5,6 +5,10 @@
 
 @layer base {
   body {
-    @apply bg-gray-500;
+    @apply bg-[#8ecae6];
+    @apply bg-no-repeat;
+    @apply h-full;
+    @apply bg-fixed;
+
   }
 }

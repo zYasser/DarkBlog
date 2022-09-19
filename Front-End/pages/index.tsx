@@ -1,14 +1,17 @@
 import NextLink from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchPost } from "../api/fetchPost";
 import { LoadingAnimation } from "../components/LoadingAnimation";
 import { NavBar } from "../components/Navbar";
+import Cookies from "js-cookie";
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
   const [fetch, setFetch] = useState(true);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  console.log(Cookies.get());
+
   const fetchPosts = () => {
     fetchPost(page)
       .then((result) => {

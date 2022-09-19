@@ -7,18 +7,21 @@ interface LoginForm {
 }
 
 export const loginRest = (data: LoginForm) => {
+  console.log(document.cookie);
+
   var para = qs.stringify({
-    'username': data.username,
-    'password': data.password 
+    username: data.username,
+    password: data.password,
   });
   var config = {
-    method: 'post',
-    url: 'http://localhost:8080/api/login',
-    headers: { 
-        'Access-Control-Allow-Credentials':true,
-
+    method: "post",
+    url: "http://localhost:8080/api/login",
+    headers: {
+      "Access-Control-Allow-Credentials": true,
     },
-    data : para
+    withCredentials: true,
+
+    data: para,
   };
-return axios(config)
+  return axios(config);
 };

@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import NextLink from "next/link";
+import { me } from "../api/me";
 interface NavBarProps {}
 
 export const NavBar: React.FC<NavBarProps> = ({}) => {
   const [user, setUser] = useState() as any;
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     const result = await me();
-  //     if (result.status === 200) {
-  //       setUser(result.data);
-  //     }
-  //   }
-  //   fetchUser();
-  // });
+  useEffect(() => {
+    const fetchUser = async () => {
+      const result = await me();
+      if (result.status === 200) {
+        setUser(result.data);
+        console.log(user);
+        
+      }
+    }
+    fetchUser();
+  },[]);
 
   return (
     <div>
@@ -22,7 +25,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
             {user ? (
               <>
                 <h2 className="text-stone-50 font-loto 2xl:text-xl">
-                  {user.username}
+                  {user}
                 </h2>
               </>
             ) : (
