@@ -10,10 +10,14 @@ interface LoginProps {}
 const Login: React.FC<LoginProps> = ({}) => {
   const [errorMsg, setErrorMsg] = useState("");
   const route = useRouter();
+  const {from} = route.query 
+  console.log(from);
+  
   return (
     <Formik
       initialValues={{ usernameOrEmail: "", password: "" }}
-      onSubmit={(values, { setErrors, setSubmitting }) => {
+      onSubmit={(values, { setSubmitting }) => {
+        
         let result;
         loginRest({
           username: values.usernameOrEmail,
@@ -21,15 +25,20 @@ const Login: React.FC<LoginProps> = ({}) => {
         })
           .then((res) => {
             if (res.status === 200) {
-              route.push("/");
+              if(from){
+                route.push(from as string);
+              }
+              else{
+                route.push('/')
+              }
+              
             }
-            console.log("hhh", res.status, typeof res.status);
 
             setSubmitting(false);
           })
           .catch((error) => {
+            setSubmitting(false)
             setErrorMsg("Something went wrong!, Please Try Again");
-            setSubmitting(false);
             if (error.response.status === 403) {
               setErrorMsg("Please Check your Username and Password!");
             } else {
@@ -56,6 +65,8 @@ const Login: React.FC<LoginProps> = ({}) => {
                 label={"Submit"}
                 text={"btn-submit"}
                 Submitted={isSubmitting}
+
+                
               />
             </div>
           </Form>

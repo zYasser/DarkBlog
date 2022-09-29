@@ -11,22 +11,19 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
       if (result.status === 200) {
         setUser(result.data);
         console.log(user);
-        
       }
-    }
+    };
     fetchUser();
-  },[]);
+  }, []);
 
   return (
-    <div>
-      <nav className="bg-white border-gray-300 px-2 sm:px-4 py-2.5 dark:bg-gray-900 ">
+    <div className="sticky top-0">
+      <nav className="bg-white border-gray-300 px-2 sm:px-4 py-2.5 dark:bg-gray-900">
         <div className=" flex flex-wrap justify-between">
           <div className="flex flex-col p-3 mt-auto  rounded-lg border border-transparent md:flex-row md:space-x-8  m:text-sm md:font-medium   ml-auto">
             {user ? (
               <>
-                <h2 className="text-stone-50 font-loto 2xl:text-xl">
-                  {user}
-                </h2>
+                <h2 className="text-stone-50 font-loto 2xl:text-xl">{user}</h2>
               </>
             ) : (
               <>
