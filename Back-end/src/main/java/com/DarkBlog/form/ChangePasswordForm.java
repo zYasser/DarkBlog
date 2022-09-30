@@ -1,16 +1,13 @@
 package com.DarkBlog.form;
 
-import com.DarkBlog.entity.Post;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class PostForm
-{
-    private Post post;
+@NoArgsConstructor
+@Data
+public class ChangePasswordForm {
+    String password;
+    String confirmedPassword;
 }

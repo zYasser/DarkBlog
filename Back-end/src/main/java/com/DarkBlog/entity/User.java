@@ -35,7 +35,7 @@ public class User {
     @Column(name = "created_at")
     private Date createdAt = new Date();
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "users")
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "users")
     private List<Role> roles = new ArrayList<>();
     @JsonBackReference
 

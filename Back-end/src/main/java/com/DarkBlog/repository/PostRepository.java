@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post,Long> {
-    @Query(value = "Select * FROM posts" ,nativeQuery = true)
+    @Query(value = "Select * FROM posts ORDER BY created_at DESC" ,nativeQuery = true)
     List<Post> findAllPagination(Pageable pageable);
 
 }

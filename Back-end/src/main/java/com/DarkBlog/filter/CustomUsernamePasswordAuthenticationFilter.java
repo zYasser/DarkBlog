@@ -12,6 +12,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -34,7 +35,8 @@ public class CustomUsernamePasswordAuthenticationFilter extends OncePerRequestFi
 
             String username = request.getParameter("username");
             String password = request.getParameter("password");
-            log.info(
+
+        log.info(
                     "username is {}",
                     username
             );
@@ -56,7 +58,7 @@ public class CustomUsernamePasswordAuthenticationFilter extends OncePerRequestFi
             }
 
         }catch (AuthenticationException authenticationException){
-            response.sendError(403 , "Check Your Email and Password");
+            response.sendError(403 , "Check Your Email/Username and Password");
 
         }
     }

@@ -23,4 +23,16 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
 
     }
+    @ExceptionHandler(UnauthenticatedException.class)
+    public ResponseEntity<ErrorMessage> UserNotExist(UnauthenticatedException exception, WebRequest socket) {
+        ErrorMessage errorMessage = new ErrorMessage(HttpStatus.UNAUTHORIZED, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
+
+    }
+    @ExceptionHandler(PasswordMatchException.class)
+    public ResponseEntity<ErrorMessage> UserNotExist(PasswordMatchException exception, WebRequest socket) {
+        ErrorMessage errorMessage = new ErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+
+    }
 }

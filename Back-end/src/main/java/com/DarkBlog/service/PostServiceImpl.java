@@ -4,13 +4,12 @@ import com.DarkBlog.entity.Post;
 import com.DarkBlog.entity.User;
 import com.DarkBlog.error.DoesNotExistException;
 import com.DarkBlog.form.PostForm;
-import com.DarkBlog.form.PostPaginationForm;
 import com.DarkBlog.repository.PostRepository;
 import com.DarkBlog.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,19 +22,21 @@ public class PostServiceImpl implements PostService {
     private PostRepository postRepository;
     @Autowired
     private UserRepository userRepository;
+
     @Override
-    public Post createPost(PostForm postForm) throws DoesNotExistException {
-        log.info("Currently in service to check whether user exist or no");
-        Optional<User> user = userRepository.findById(postForm.getUserId());
+    public Post createPost(PostForm postForm, Authentication authentication) throws DoesNotExistException {
+        log.info("Currently checking if account still available");
+        System.out.println("authentication = " + authentication.getName());
+        Optional<User> user = userRepository.findByUsername(authentication.getName());
         if(user.isEmpty()){
-            log.error("User doesn't exist!");
-            throw new DoesNotExistException("User Doesn't exist");
+            log.error("user doesn't exist");
+            throw new DoesNotExistException("User doesn't exist");
         }
         log.info("User exist currently adding user ");
-        Post post=postForm.getPost();
-        post.setId(user.get().getId());
+        Post post = postForm.getPost();
+        post.setUserId(user.get());
         postRepository.saveAndFlush(post);
-        log.info("User Added Successfully");
+        log.info("Post Added Successfully");
         return post;
 
     }
@@ -58,6 +59,12 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<Post> findWithPagination(Integer page) {
         log.info("From service currently fetching data....");
-        return postRepository.findAllPagination(PageRequest.of(page , 3));
+        return postRepository.findAllPagination(PageRequest.of(page, 7));
+    }
+
+    @Override
+    public Post findPostById(Long id) throws DoesNotExistException {
+        log.info("currently in services fetching post by an id");
+        return postRepository.findById(id).orElseThrow(() -> new DoesNotExistException("There's no post with this id"));
     }
 }

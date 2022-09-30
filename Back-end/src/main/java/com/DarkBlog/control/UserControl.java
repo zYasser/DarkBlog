@@ -3,6 +3,8 @@ package com.DarkBlog.control;
 import com.DarkBlog.entity.User;
 import com.DarkBlog.error.DoesNotExistException;
 import com.DarkBlog.error.EmailAlreadyExistException;
+import com.DarkBlog.error.PasswordMatchException;
+import com.DarkBlog.form.ChangePasswordForm;
 import com.DarkBlog.form.LoginForm;
 import com.DarkBlog.service.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -40,6 +44,15 @@ public class UserControl {
     public String me(Authentication authentication) throws IOException {
 
         return userService.getMe(authentication);
+    }
+    @GetMapping("/forgetPassword")
+    public String forgetPassword(@RequestParam("email") String email){
+
+         return userService.forgetPassword(email);
+    }
+    @PostMapping("/changePassword/reset")
+    public boolean changePassword(@RequestParam("token") String token , @RequestBody ChangePasswordForm form) throws PasswordMatchException, DoesNotExistException {
+        return userService.changePassword(token,form);
     }
     @GetMapping("/user/{id}")
     public User getUser(@PathVariable int id) throws DoesNotExistException {
