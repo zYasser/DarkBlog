@@ -12,12 +12,13 @@ import com.DarkBlog.form.LoginForm;
 import com.DarkBlog.repository.ForgetPasswordRepository;
 import com.DarkBlog.repository.RoleRepository;
 import com.DarkBlog.repository.UserRepository;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,7 @@ import static java.util.Arrays.asList;
 @Service
 @Transactional
 @Slf4j
+@Data
 public class UserServiceImpl {
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -56,10 +58,11 @@ public class UserServiceImpl {
         return user;
 
     }
+
     @Transactional
-    public void addRoleToUser(User user){
-        Optional<Role> role=roleRepository.findByName("User");
-        if(role.isEmpty()){
+    public void addRoleToUser(User user) {
+        Optional<Role> role = roleRepository.findByName("User");
+        if (role.isEmpty()) {
             throw new NullPointerException("Roll doesn't exist");
 
         }
@@ -90,7 +93,7 @@ public class UserServiceImpl {
         return true;
     }
 
-    public String getMe(Authentication authentication)   {
+    public String getMe(Authentication authentication) {
         log.info("get me ");
         return authentication.getName();
     }
@@ -109,17 +112,14 @@ public class UserServiceImpl {
             return null;
         }
     }
-    public Collection<? extends GrantedAuthority> getAuthorities(
-            Collection<Role> roles) {
-        List<GrantedAuthority> authorities
-                = new ArrayList<>();
-        for (Role role: roles) {
+
+    public Collection<? extends GrantedAuthority> getAuthorities(Collection<Role> roles) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (Role role : roles) {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         }
-
         return authorities;
     }
-
 
     private boolean loginWithEmail(String email, String password) {
         Optional<User> user = userRepository.findByEmail(email);
@@ -130,46 +130,46 @@ public class UserServiceImpl {
     }
 
     public User getUser(Long id) throws DoesNotExistException {
-        return userRepository.findById(id).orElseThrow(()->new  DoesNotExistException("User doesn't exist"));
+        return userRepository.findById(id).orElseThrow(() -> new DoesNotExistException("User doesn't exist"));
     }
 
     public String forgetPassword(String email) {
-        log.info(  email);
-        Optional<User> user=userRepository.findByEmail(email);
-        if(user.isEmpty()) {
+        log.info(email);
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) {
             log.error("User doesn't exist, End forget password operation");
             return "";
         }
         log.info("email exist currently creating token");
-        String username=user.get().getUsername();
-        String generatedToken= UUID.randomUUID().toString();
-        ForgetPasswordToken token= ForgetPasswordToken.builder().username(username).token(generatedToken).build();
+        String username = user.get().getUsername();
+        String generatedToken = UUID.randomUUID().toString();
+        ForgetPasswordToken token = ForgetPasswordToken.builder().username(username).token(generatedToken).build();
         forgetPasswordTokenRepo.save(token);
         log.info("Generated token has been saved into Database");
         return generatedToken;
-        }
-
-    public boolean changePassword(String token , ChangePasswordForm changePasswordForm) throws PasswordMatchException, DoesNotExistException {
-     String password=changePasswordForm.getPassword();
-     if(!password.equals(changePasswordForm.getConfirmedPassword())){
-         log.error("The password and confirm password doesn't match, end Changing password process");
-         throw new PasswordMatchException("The password and confirm password doesn't match");
-     }
-     ForgetPasswordToken _user =forgetPasswordTokenRepo.findById(token).orElseThrow(()->{
-         log.error("token doesn't exist/expired");
-          return new DoesNotExistException("token doesn't exist/expired");
-     });
-     User user = userRepository.findByUsername(_user.username).orElseThrow(()->{
-         log.error("user doesn't exist");
-         return new DoesNotExistException("user doesn't exist");
-
-     });
-     password=passwordEncoder.Argon2PasswordEncoder().encode(password);
-     user.setPassword(password);
-     userRepository.saveAndFlush(user);
-     forgetPasswordTokenRepo.delete(_user);
-     return true;
     }
 
+    public boolean changePassword(String token,
+            ChangePasswordForm changePasswordForm) throws PasswordMatchException, DoesNotExistException {
+        String password = changePasswordForm.getPassword();
+        if (!password.equals(changePasswordForm.getConfirmedPassword())) {
+            log.error("The password and confirm password doesn't match, end Changing password process");
+            throw new PasswordMatchException("The password and confirm password doesn't match");
+        }
+        ForgetPasswordToken _user = forgetPasswordTokenRepo.findById(token).orElseThrow(() -> {
+            log.error("token doesn't exist/expired");
+            return new DoesNotExistException("token doesn't exist/expired");
+        });
+        User user = userRepository.findByUsername(_user.username).orElseThrow(() -> {
+            log.error("user doesn't exist");
+            return new DoesNotExistException("user doesn't exist");
+
+        });
+        password = passwordEncoder.Argon2PasswordEncoder().encode(password);
+        user.setPassword(password);
+        userRepository.saveAndFlush(user);
+        forgetPasswordTokenRepo.delete(_user);
+        return true;
+    }
 
 }

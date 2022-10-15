@@ -28,7 +28,7 @@ public class User {
     private String username;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-    private int points;
+    private int points=0;
     @Column(nullable = false, unique = true)
     @Email
     private String email;
@@ -41,5 +41,7 @@ public class User {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private List<Post> posts = new ArrayList<>();
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<UpVote> upVotes=new ArrayList<>();
 }

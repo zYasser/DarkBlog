@@ -67,4 +67,8 @@ public class PostServiceImpl implements PostService {
         log.info("currently in services fetching post by an id");
         return postRepository.findById(id).orElseThrow(() -> new DoesNotExistException("There's no post with this id"));
     }
+    public boolean upVote(Long userId, Long PostId){
+
+        return true;
+    }
 }
