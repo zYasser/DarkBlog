@@ -1,10 +1,7 @@
 package com.DarkBlog.entity;
 
 import com.fasterxml.jackson.annotation.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -43,5 +40,7 @@ public class User {
     private List<Post> posts = new ArrayList<>();
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
+    @ToString.Exclude
+
     private List<UpVote> upVotes=new ArrayList<>();
 }
