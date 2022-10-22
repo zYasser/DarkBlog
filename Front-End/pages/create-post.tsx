@@ -12,7 +12,7 @@ interface createPostProps {}
 export const createPost: React.FC<createPostProps> = ({}) => {
   const [user, setUser] = useState() as any;
   const route = useRouter();
-  const [error,setError]=useState(false)
+  const [error, setError] = useState(false);
   useEffect(() => {
     const fetchUser = () => {
       me()
@@ -24,10 +24,12 @@ export const createPost: React.FC<createPostProps> = ({}) => {
             route.push("/login");
           }
         })
-        .catch(() => route.push({
-          pathname:'/login',
-          query:{from : 'create-post'}
-        }));
+        .catch(() =>
+          route.push({
+            pathname: "/login",
+            query: { from: "create-post" },
+          })
+        );
     };
 
     fetchUser();
@@ -35,12 +37,14 @@ export const createPost: React.FC<createPostProps> = ({}) => {
   return (
     <Formik
       initialValues={{ title: "", text: "" }}
-      onSubmit={(values, { setSubmitting }) => {
-        createNewPost(values).then(()=>{
-          route.push('/')
-        }).catch(()=>{
-          setError(true)
-        })
+      onSubmit={(values) => {
+        createNewPost(values)
+          .then(() => {
+            route.push("/");
+          })
+          .catch(() => {
+            setError(true);
+          });
         console.log(values);
       }}
     >

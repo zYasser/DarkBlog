@@ -23,7 +23,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
           <div className="flex flex-col p-3 mt-auto  rounded-lg border border-transparent md:flex-row md:space-x-8  m:text-sm md:font-medium   ml-auto">
             {user ? (
               <>
-                <h2 className="text-stone-50 font-loto 2xl:text-xl">{user}</h2>
+                <h2 className="text-stone-50 font-loto 2xl:text-xl">{user.username}</h2>
               </>
             ) : (
               <>
