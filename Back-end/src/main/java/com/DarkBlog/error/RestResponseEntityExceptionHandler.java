@@ -18,7 +18,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     }
     @ExceptionHandler(DoesNotExistException.class)
-    public ResponseEntity<ErrorMessage> UserNotExist(DoesNotExistException exception, WebRequest socket) {
+    public ResponseEntity<ErrorMessage> DoesNotExistException(DoesNotExistException exception, WebRequest socket) {
         ErrorMessage errorMessage = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
 
@@ -36,9 +36,9 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     }
     @ExceptionHandler(AuthorizationException.class)
-    public ResponseEntity<ErrorMessage> Unauthorized(UnauthenticatedException exception, WebRequest socket) {
-        ErrorMessage errorMessage = new ErrorMessage(HttpStatus.UNAUTHORIZED, exception.getMessage());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
+    public ResponseEntity<ErrorMessage> Unauthorized(AuthorizationException exception, WebRequest socket) {
+        ErrorMessage errorMessage = new ErrorMessage(HttpStatus.FORBIDDEN, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorMessage);
 
     }
 

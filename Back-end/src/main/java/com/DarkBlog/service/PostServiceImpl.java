@@ -53,7 +53,8 @@ public class PostServiceImpl implements PostService {
             log.error("{} user not authorized to delete post {}",userId,postId);
             throw new AuthorizationException("You don't have the privilege to delete this post");
         }
-        return false;
+        postRepository.delete(post);
+        return true;
     }
 
     @Override

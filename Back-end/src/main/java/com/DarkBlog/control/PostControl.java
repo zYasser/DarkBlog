@@ -72,9 +72,9 @@ public class PostControl {
         return ResponseEntity.ok(true);
     }
     @DeleteMapping("/delete")
-    private ResponseEntity<Boolean> deletePost(@RequestParam Long postId , Authentication authentication) throws DoesNotExistException, AuthorizationException {
-        log.info("received request from {} to delete post with id {}",authentication.getName(),postId);
-        return (postService.deletePost(postId,authentication.getName())) ? ResponseEntity.ok(true) : ResponseEntity.badRequest().body(false);
+    private ResponseEntity<Boolean> deletePost(@RequestParam Long post , Authentication authentication) throws DoesNotExistException, AuthorizationException {
+        log.info("received request from {} to delete post with id {}",authentication.getName(),post);
+        return (postService.deletePost(post,authentication.getName())) ? ResponseEntity.ok(true) : ResponseEntity.badRequest().body(false);
 
     }
 }
