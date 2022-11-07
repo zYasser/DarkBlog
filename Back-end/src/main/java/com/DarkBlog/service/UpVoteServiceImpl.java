@@ -24,20 +24,25 @@ public class UpVoteServiceImpl implements UpVoteService {
     private PostRepository postRepository;
     @Override
     public void vote(Long userId, Long postId, int value) throws DoesNotExistException {
-        log.info("receive request from userId {} to upvote post {}",userId,postId );
+        log.info("currently in the service, process the request from userId {} to upvote post {} ",userId,postId );
         Optional<UpVote> existedVote=upVoteRepository.findByPostIdAndUser(userId,postId);
         Post post=postRepository.findById(postId).orElseThrow(()->new DoesNotExistException("Post doesn't exist"));
         User user=userRepository.findById(userId).orElseThrow(()->new DoesNotExistException("User doesn't exist"));
         UpVoteId voteId=UpVoteId.builder().userId(userId).postId(postId).build();
         if(existedVote.isEmpty()){
             upVoteRepository.save(UpVote.builder().points(value).post(post).user(user).upVoteId(voteId).build());
+            post.setPoint(post.getPoint()+value);
+
         }
         else if(existedVote.get().getPoints()==value){
             upVoteRepository.delete(existedVote.get());
+            post.setPoint(value==1 ? post.getPoint()-1  :post.getPoint()+1);
         }else{
             existedVote.get().setPoints(value);
             upVoteRepository.save(existedVote.get());
+            post.setPoint(post.getPoint()+(value*2));
         }
+        postRepository.save(post);
 
 
     }

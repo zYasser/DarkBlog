@@ -132,6 +132,11 @@ public class UserServiceImpl {
     public User getUser(Long id) throws DoesNotExistException {
         return userRepository.findById(id).orElseThrow(() -> new DoesNotExistException("User doesn't exist"));
     }
+    public User getUserByUsername(String username) throws DoesNotExistException {
+        log.info("received request to get user {} details " , username);
+        return userRepository.findByUsername(username).orElseThrow(() -> new DoesNotExistException("User doesn't exist"));
+
+    }
 
     public String forgetPassword(String email) {
         log.info(email);

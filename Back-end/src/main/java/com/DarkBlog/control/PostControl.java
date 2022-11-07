@@ -1,6 +1,7 @@
 package com.DarkBlog.control;
 
 import com.DarkBlog.entity.Post;
+import com.DarkBlog.error.AuthorizationException;
 import com.DarkBlog.error.DoesNotExistException;
 import com.DarkBlog.error.GenericException;
 import com.DarkBlog.error.UnauthenticatedException;
@@ -66,8 +67,14 @@ public class PostControl {
 
     @PostMapping("/up-vote")
     private ResponseEntity<Boolean> upvote(@RequestBody UpVoteForm form) throws DoesNotExistException {
-        log.info("receive request from end-point");
+        log.info("receive request from up-vote end-point");
         upVoteService.vote(form.getUserId(),form.getPostId(),form.getPoint());
         return ResponseEntity.ok(true);
+    }
+    @DeleteMapping("/delete")
+    private ResponseEntity<Boolean> deletePost(@RequestParam Long postId , Authentication authentication) throws DoesNotExistException, AuthorizationException {
+        log.info("received request from {} to delete post with id {}",authentication.getName(),postId);
+        return (postService.deletePost(postId,authentication.getName())) ? ResponseEntity.ok(true) : ResponseEntity.badRequest().body(false);
+
     }
 }

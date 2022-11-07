@@ -2,6 +2,7 @@ package com.DarkBlog.service;
 
 import com.DarkBlog.entity.Post;
 import com.DarkBlog.entity.User;
+import com.DarkBlog.error.AuthorizationException;
 import com.DarkBlog.error.DoesNotExistException;
 import com.DarkBlog.form.PostForm;
 import com.DarkBlog.repository.PostRepository;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +44,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public boolean deletePost(String id) {
+    public boolean deletePost(Long postId ,String userId) throws DoesNotExistException, AuthorizationException {
+        Post post=postRepository.findById(postId).orElseThrow(()->{
+            log.error("There's No Post With this id {}",postId);
+            return new DoesNotExistException("There's no existed post with this id");
+        });
+        if(!post.getUserId().getUsername().equals(userId)){
+            log.error("{} user not authorized to delete post {}",userId,postId);
+            throw new AuthorizationException("You don't have the privilege to delete this post");
+        }
         return false;
     }
 

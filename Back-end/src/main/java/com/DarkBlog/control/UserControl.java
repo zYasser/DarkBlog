@@ -41,9 +41,9 @@ public class UserControl {
     }
 
     @GetMapping("/me")
-    public String me(Authentication authentication) throws IOException {
+    public User me(Authentication authentication) throws DoesNotExistException {
 
-        return userService.getMe(authentication);
+        return userService.getUserByUsername(authentication.getName());
     }
     @GetMapping("/forgetPassword")
     public String forgetPassword(@RequestParam("email") String email){
