@@ -39,19 +39,19 @@ class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        http.authorizeRequests().antMatchers("/api/register", "/logout" , "/api/forgetPassword" , "/api/changePassword/**" , "/api/login" , "/api/post/posts").permitAll();
-        http.addFilterAt(filter, UsernamePasswordAuthenticationFilter.class);
-        http.authorizeRequests().anyRequest().authenticated();
-
-
-        http.logout().deleteCookies().logoutSuccessHandler(customLogoutSuccessHandler);
-        http
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-                );
-
-        return http.build();
+        return http.csrf().disable().build();
+//        http.authorizeRequests().antMatchers("/api/register", "/logout" , "/api/forgetPassword" , "/api/changePassword/**" , "/api/login" , "/api/post/posts").permitAll();
+//        http.addFilterAt(filter, UsernamePasswordAuthenticationFilter.class);
+//        http.authorizeRequests().anyRequest().authenticated();
+//
+//
+//        http.logout().deleteCookies().logoutSuccessHandler(customLogoutSuccessHandler);
+//        http
+//                .sessionManagement(session -> session
+//                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+//                );
+//
+//        return http.build();
     }
 
     @Bean

@@ -4,7 +4,6 @@ import com.DarkBlog.entity.Post;
 import com.DarkBlog.error.AuthorizationException;
 import com.DarkBlog.error.DoesNotExistException;
 import com.DarkBlog.error.GenericException;
-import com.DarkBlog.error.UnauthenticatedException;
 import com.DarkBlog.form.PostForm;
 import com.DarkBlog.form.UpVoteForm;
 import com.DarkBlog.service.PostService;
@@ -22,10 +21,12 @@ import java.util.Optional;
 @RequestMapping("/api/post")
 @Slf4j
 public class PostControl {
+
     @Autowired
     private PostService postService;
     @Autowired
     private UpVoteService upVoteService;
+
 
     @GetMapping("/post")
     private ResponseEntity<Post> getPostById(@RequestParam("id") Long id) throws DoesNotExistException {
@@ -34,25 +35,25 @@ public class PostControl {
 
     }
 
+
     @PostMapping("/create-post")
-    private ResponseEntity<Post> addPost(@RequestBody PostForm postForm,
-            Authentication authentication) throws GenericException, DoesNotExistException, UnauthenticatedException {
+    private ResponseEntity<Post> addPost(
+            @RequestBody PostForm postForm) throws GenericException, DoesNotExistException {
         log.info("received the request");
-        if (authentication == null) {
-            throw new UnauthenticatedException("Please Login To Create Post");
-        }
-        Optional<Post> post = Optional.ofNullable(postService.createPost(postForm, authentication));
+        Optional<Post> post = Optional.ofNullable(postService.createPost(postForm));
         if (post.isEmpty())
             throw new GenericException("Something went wrong, Please Try Again");
         return ResponseEntity.ok(post.get());
 
     }
 
+
     @GetMapping("/admin/posts")
     private ResponseEntity<List<Post>> posts() {
         List<Post> list = postService.findAllPost();
         return ResponseEntity.ok(list);
     }
+
 
     @GetMapping("/posts")
     private ResponseEntity<List<Post>> postPagination(@RequestParam Integer page) {
@@ -65,16 +66,21 @@ public class PostControl {
         return ResponseEntity.ok(list);
     }
 
+
     @PostMapping("/up-vote")
     private ResponseEntity<Boolean> upvote(@RequestBody UpVoteForm form) throws DoesNotExistException {
         log.info("receive request from up-vote end-point");
-        upVoteService.vote(form.getUserId(),form.getPostId(),form.getPoint());
+        upVoteService.vote(form.getUserId(), form.getPostId(), form.getPoint());
         return ResponseEntity.ok(true);
     }
+
+
     @DeleteMapping("/delete")
-    private ResponseEntity<Boolean> deletePost(@RequestParam Long post , Authentication authentication) throws DoesNotExistException, AuthorizationException {
-        log.info("received request from {} to delete post with id {}",authentication.getName(),post);
-        return (postService.deletePost(post,authentication.getName())) ? ResponseEntity.ok(true) : ResponseEntity.badRequest().body(false);
+    private ResponseEntity<Boolean> deletePost(@RequestParam Long post,
+            Authentication authentication) throws DoesNotExistException, AuthorizationException {
+        log.info("received request from {} to delete post with id {}", authentication.getName(), post);
+        return (postService.deletePost(post,
+                authentication.getName())) ? ResponseEntity.ok(true) : ResponseEntity.badRequest().body(false);
 
     }
 }

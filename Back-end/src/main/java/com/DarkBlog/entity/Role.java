@@ -2,8 +2,10 @@ package com.DarkBlog.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -12,7 +14,8 @@ import java.util.List;
 @Entity
 @Data
 @Builder
-
+@AllArgsConstructor
+@NoArgsConstructor
 public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

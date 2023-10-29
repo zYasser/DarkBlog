@@ -26,10 +26,9 @@ public class PostServiceImpl implements PostService {
     private UserRepository userRepository;
 
     @Override
-    public Post createPost(PostForm postForm, Authentication authentication) throws DoesNotExistException {
+    public Post createPost(PostForm postForm) throws DoesNotExistException {
         log.info("Currently checking if account still available");
-        System.out.println("authentication = " + authentication.getName());
-        Optional<User> user = userRepository.findByUsername(authentication.getName());
+        Optional<User> user = userRepository.findById(postForm.getUser_id());
         if(user.isEmpty()){
             log.error("user doesn't exist");
             throw new DoesNotExistException("User doesn't exist");

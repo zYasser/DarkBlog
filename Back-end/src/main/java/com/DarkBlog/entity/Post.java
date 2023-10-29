@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
+import org.hibernate.annotations.Type;
 import reactor.util.annotation.Nullable;
 
 import javax.persistence.*;
@@ -29,6 +30,7 @@ public class Post {
     private String title;
     @Column(name = "created_at")
     private Date createdAt = new Date();
+    @Lob
     private String text;
     private Integer point=0;
     @ManyToOne(fetch = FetchType.EAGER)

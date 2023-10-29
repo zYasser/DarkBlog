@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import java.util.List;
 
 public interface PostService {
-    Post createPost(PostForm postForm, Authentication authentication) throws DoesNotExistException;
+    Post createPost(PostForm postForm) throws DoesNotExistException;
     boolean deletePost(Long postId, String userId) throws DoesNotExistException, AuthorizationException;
     boolean votePost(String id);
     Post findPostById(Long id) throws DoesNotExistException;

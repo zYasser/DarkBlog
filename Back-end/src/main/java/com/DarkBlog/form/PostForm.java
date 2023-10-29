@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PostForm
 {
+    private Long user_id;
     private Post post;
 }
